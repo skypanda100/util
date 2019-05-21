@@ -84,7 +84,7 @@ int bz2_decompress(const char *src_file_path_ptr, const char *dst_file_path_ptr)
     return v_system(cmd);
 }
 
-char *l_trim(const char *input_ptr, char *output_ptr)
+void l_trim(const char *input_ptr, char *output_ptr)
 {
     assert(input_ptr != NULL);
     assert(output_ptr != NULL);
@@ -93,10 +93,10 @@ char *l_trim(const char *input_ptr, char *output_ptr)
     {
         ;
     }
-    return strcpy(output_ptr, input_ptr);
+    strcpy(output_ptr, input_ptr);
 }
 
-char *a_trim(const char *input_ptr, char *output_ptr)
+void a_trim(const char *input_ptr, char *output_ptr)
 {
     char *p = NULL;
     assert(input_ptr != NULL);
@@ -107,7 +107,6 @@ char *a_trim(const char *input_ptr, char *output_ptr)
         ;
     }
     *(++p) = '\0';
-    return output_ptr;
 }
 
 int reg_exec(const char *input_ptr, const char *pattern_ptr, int *so_ptr, int *eo_ptr)
@@ -151,8 +150,7 @@ int reg_exec(const char *input_ptr, const char *pattern_ptr, int *so_ptr, int *e
     return 0;
 }
 
-
-void sort_by_ascii(char **c_ptr_ptr, int len, int file_len, int is_desc)
+void sort_by_ascii(char **c_ptr_ptr, int len, int is_desc)
 {
     for(int i = len - 1;i >= 0;i--)
     {
@@ -161,12 +159,9 @@ void sort_by_ascii(char **c_ptr_ptr, int len, int file_len, int is_desc)
             char *cur_ptr = c_ptr_ptr[j];
             char *nxt_ptr = c_ptr_ptr[j - 1];
 
-            size_t cur_len = strlen(cur_ptr);
-            size_t nxt_len = strlen(nxt_ptr);
-
             if(is_desc)
             {
-                if(strcmp(cur_ptr + cur_len - file_len, nxt_ptr + nxt_len - file_len) > 0)
+                if(strcmp(cur_ptr, nxt_ptr) > 0)
                 {
                     char *p_tmp = nxt_ptr;
                     c_ptr_ptr[j - 1] = cur_ptr;
@@ -175,7 +170,7 @@ void sort_by_ascii(char **c_ptr_ptr, int len, int file_len, int is_desc)
             }
             else
             {
-                if(strcmp(cur_ptr + cur_len - file_len, nxt_ptr + nxt_len - file_len) < 0)
+                if(strcmp(cur_ptr, nxt_ptr) < 0)
                 {
                     char *p_tmp = nxt_ptr;
                     c_ptr_ptr[j - 1] = cur_ptr;
@@ -186,7 +181,7 @@ void sort_by_ascii(char **c_ptr_ptr, int len, int file_len, int is_desc)
     }
 }
 
-int list_dir(const char *path_ptr, char **dir_ptr_ptr)
+int list_dir(const char *path_ptr, char ***dir_ptr_ptr_ptr)
 {
     DIR *d;
     struct dirent *file;
@@ -210,14 +205,15 @@ int list_dir(const char *path_ptr, char **dir_ptr_ptr)
         if(stat(sub_path, &st) == 0 && S_ISDIR(st.st_mode))
         {
             dir_count++;
-            *(dir_ptr_ptr + (dir_count - 1)) = strdup(file->d_name);
+            *dir_ptr_ptr_ptr = realloc(*dir_ptr_ptr_ptr, dir_count * sizeof(char *));
+            *(*dir_ptr_ptr_ptr + (dir_count - 1)) = strdup(file->d_name);
         }
     }
     closedir(d);
     return dir_count;
 }
 
-int list_file(const char *path_ptr, char **file_ptr_ptr)
+int list_file(const char *path_ptr, char ***file_ptr_ptr_ptr)
 {
     DIR *d;
     struct dirent *file;
@@ -242,12 +238,13 @@ int list_file(const char *path_ptr, char **file_ptr_ptr)
         {
             if(S_ISDIR(st.st_mode))
             {
-                file_count += list_file(sub_path, file_ptr_ptr);
+                file_count += list_file(sub_path, file_ptr_ptr_ptr);
             }
             else if(S_ISREG(st.st_mode))
             {
                 file_count++;
-                *(file_ptr_ptr + (file_count - 1)) = strdup(sub_path);
+                *file_ptr_ptr_ptr = realloc(*file_ptr_ptr_ptr, file_count * sizeof(char *));
+                *(*file_ptr_ptr_ptr + (file_count - 1)) = strdup(sub_path);
             }
 
         }

@@ -54,17 +54,15 @@ int bz2_decompress(const char *src_file_path_ptr, const char *dst_file_path_ptr)
  * 去除左侧space
  * @param output_ptr
  * @param input_ptr
- * @return
  */
-char *l_trim(const char *input_ptr, char *output_ptr);
+void l_trim(const char *input_ptr, char *output_ptr);
 
 /**
  * 去除左侧以及右侧的space
  * @param input_ptr
  * @param output_ptr
- * @return
  */
-char *a_trim(const char *input_ptr, char *output_ptr);
+void a_trim(const char *input_ptr, char *output_ptr);
 
 /**
  * 提取符合pattern_ptr规则的开始以及结束索引
@@ -80,26 +78,25 @@ int reg_exec(const char *input_ptr, const char *pattern_ptr, int *so_ptr, int *e
  * 根据ascii排序
  * @param c_ptr_ptr
  * @param len
- * @param file_len
  * @param is_desc
  */
-void sort_by_ascii(char **c_ptr_ptr, int len, int file_len, int is_desc);
+void sort_by_ascii(char **c_ptr_ptr, int len, int is_desc);
 
 /**
  * 查找所有子目录
  * @param path_ptr
- * @param dir_ptr_ptr
+ * @param dir_ptr_ptr_ptr
  * @return
  */
-int list_dir(const char *path_ptr,  char **dir_ptr_ptr);
+int list_dir(const char *path_ptr,  char ***dir_ptr_ptr_ptr);
 
 /**
  * 查找所有文件包括子目录中的的文件
  * @param path_ptr
- * @param file_ptr_ptr
+ * @param file_ptr_ptr_ptr
  * @return
  */
-int list_file(const char *path_ptr, char **file_ptr_ptr);
+int list_file(const char *path_ptr, char ***file_ptr_ptr_ptr);
 
 
 #endif //UTIL_H
