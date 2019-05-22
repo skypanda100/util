@@ -206,7 +206,7 @@ int list_dir(const char *path_ptr, char ***dir_ptr_ptr_ptr)
         {
             dir_count++;
             *dir_ptr_ptr_ptr = realloc(*dir_ptr_ptr_ptr, dir_count * sizeof(char *));
-            *(*dir_ptr_ptr_ptr + (dir_count - 1)) = strdup(file->d_name);
+            (*dir_ptr_ptr_ptr)[dir_count - 1] = strdup(file->d_name);
         }
     }
     closedir(d);
@@ -244,9 +244,8 @@ int list_file(const char *path_ptr, char ***file_ptr_ptr_ptr)
             {
                 file_count++;
                 *file_ptr_ptr_ptr = realloc(*file_ptr_ptr_ptr, file_count * sizeof(char *));
-                *(*file_ptr_ptr_ptr + (file_count - 1)) = strdup(sub_path);
+                (*file_ptr_ptr_ptr)[file_count - 1] = strdup(sub_path);
             }
-
         }
     }
     closedir(d);
