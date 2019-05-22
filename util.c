@@ -252,3 +252,47 @@ int list_file(const char *path_ptr, char ***file_ptr_ptr_ptr)
 
     return file_count;
 }
+
+int copy_file(const char *src_ptr, const char *dst_ptr)
+{
+    int fd_src = 0, fd_dst = 0;
+    int len = 0;
+    char buff[1024] = {0};
+    char dir[PATH_MAX] = {0};
+    strcpy(dir, dst_ptr);
+    for(int i = strlen(dir);i >= 0;i--)
+    {
+        if(dir[i] == '/')
+        {
+            dir[i] = '\0';
+            break;
+        }
+    }
+
+    if(make_dir(dir) != 0)
+    {
+        return -1;
+    }
+
+    fd_src = open(src_ptr, O_RDONLY);
+    if(fd_src < 0)
+    {
+        return -1;
+    }
+
+    fd_dst = open(dst_ptr, O_RDWR|O_CREAT);
+    if(fd_dst < 0)
+    {
+        close(fd_src);
+        return -1;
+    }
+
+    while(len = read(fd_src, buff, sizeof(buff) / sizeof(char)))
+    {
+        write(fd_dst, buff, len);
+    }
+    close(fd_src);
+    close(fd_dst);
+
+    return 0;
+}

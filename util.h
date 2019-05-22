@@ -98,5 +98,12 @@ int list_dir(const char *path_ptr,  char ***dir_ptr_ptr_ptr);
  */
 int list_file(const char *path_ptr, char ***file_ptr_ptr_ptr);
 
+/**
+ * 拷贝文件（会自动创建目标目录）
+ * @param src_ptr
+ * @param dst_ptr
+ * @return
+ */
+int copy_file(const char *src_ptr, const char *dst_ptr);
 
 #endif //UTIL_H
