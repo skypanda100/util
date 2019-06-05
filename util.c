@@ -296,3 +296,70 @@ int copy_file(const char *src_ptr, const char *dst_ptr)
 
     return 0;
 }
+
+int index_of_str_with_separator(const char *source_ptr, const char *split_ptr, const char *target_ptr)
+{
+    char temp[4096] = {0};
+    int found = -1;
+    int index = 0;
+    char *sub_ptr;
+    strcpy(temp, source_ptr);
+    char *buf_ptr = (char *)temp;
+    sub_ptr = strsep(&buf_ptr, split_ptr);
+    while(sub_ptr)
+    {
+        if(strcmp(sub_ptr, target_ptr) == 0)
+        {
+            found = index;
+            break;
+        }
+        sub_ptr = strsep(&buf_ptr, split_ptr);
+        index++;
+    }
+    return found;
+}
+
+void str_at_str_with_separator(const char *source_ptr, const char *split_ptr, int target_index, char *target_ptr)
+{
+    char temp[4096] = {0};
+    int index = 0;
+    char *sub_ptr;
+    strcpy(temp, source_ptr);
+    char *buf_ptr = (char *)temp;
+    sub_ptr = strsep(&buf_ptr, split_ptr);
+    while(sub_ptr)
+    {
+        if(target_index == index)
+        {
+            strcpy(target_ptr, sub_ptr);
+            break;
+        }
+        sub_ptr = strsep(&buf_ptr, split_ptr);
+        index++;
+    }
+}
+
+void parse_str_to_timestamp(const char *time_ptr, const char *fmt_str, time_t *timestamp_ptr)
+{
+    struct tm tm_time;
+    memset(&tm_time, 0, sizeof(struct tm));
+    strptime(time_ptr, fmt_str, &tm_time);
+    *timestamp_ptr = mktime(&tm_time);
+}
+
+void format_timestamp_to_str(time_t timestamp, const char *fmt_str, char *time_ptr, int time_len)
+{
+    struct tm *tm_time_ptr = localtime(&timestamp);
+    strftime(time_ptr, time_len, fmt_str, tm_time_ptr);
+}
+
+void parse_str_to_tm(const char *time_ptr, const char *fmt_str, struct tm *tm_time_ptr)
+{
+    memset(tm_time_ptr, 0, sizeof(struct tm));
+    strptime(time_ptr, fmt_str, tm_time_ptr);
+}
+
+void format_tm_to_str(const struct tm *tm_time_ptr, const char *fmt_str, char *time_ptr, int time_len)
+{
+    strftime(time_ptr, time_len, fmt_str, tm_time_ptr);
+}

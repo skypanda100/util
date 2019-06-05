@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <string.h>
 #include <limits.h>
 #include <fcntl.h>
@@ -105,5 +106,57 @@ int list_file(const char *path_ptr, char ***file_ptr_ptr_ptr);
  * @return
  */
 int copy_file(const char *src_ptr, const char *dst_ptr);
+
+/**
+ * 根据分隔符将源字符串拆分为源数组，再获取目标字符串在源数组中的位置
+ * @param source_ptr
+ * @param split_ptr
+ * @param target_ptr
+ * @return
+ */
+int index_of_str_with_separator(const char *source_ptr, const char *split_ptr, const char *target_ptr);
+
+/**
+ * 根据分隔符将源字符串拆分为源数组，再从源数组中获取目标索引位置的字符串
+ * @param source_ptr
+ * @param split_ptr
+ * @param target_index
+ * @param target_ptr
+ */
+void str_at_str_with_separator(const char *source_ptr, const char *split_ptr, int target_index, char *target_ptr);
+
+/**
+ * 将字符串转化为时间戳
+ * @param time_ptr
+ * @param fmt_str
+ * @param timestamp_ptr
+ */
+void parse_str_to_timestamp(const char *time_ptr, const char *fmt_str, time_t *timestamp_ptr);
+
+/**
+ * 将时间戳转化为字符串
+ * @param timestamp
+ * @param fmt_str
+ * @param time_ptr
+ * @param time_len
+ */
+void format_timestamp_to_str(time_t timestamp, const char *fmt_str, char *time_ptr, int time_len);
+
+/**
+ * 将字符串转化为时间
+ * @param time_ptr
+ * @param fmt_str
+ * @param tm_time_ptr
+ */
+void parse_str_to_tm(const char *time_ptr, const char *fmt_str, struct tm *tm_time_ptr);
+
+/**
+ * 将时间转化为字符串
+ * @param tm_time_ptr
+ * @param fmt_str
+ * @param time_ptr
+ * @param time_len
+ */
+void format_tm_to_str(const struct tm *tm_time_ptr, const char *fmt_str, char *time_ptr, int time_len);
 
 #endif //UTIL_H
